@@ -1,23 +1,26 @@
 import wikipedia
+
 def search_wikipedia(query):
     wikipedia.set_lang("en")
     try:
-        search_result = wikipedia.search(query, results = 10) # Get the top 5 results.
-        if not search_result:
-            return "No Information Found."
-        meanings = []
-        for results in search_result:
+        search_results = wikipedia.search(query, results=5)
+        if not search_results:
+            return "No information found"
+
+        meanings =[]
+        for results in search_results:
             try:
-                summary = wikipedia.summary(results, sentences = 2)
+                summary=wikipedia.summary(results,sentences=2)
                 meanings.append(f"**{results}** - {summary}")
             except wikipedia.exceptions.DisambiguationError:
-                meanings.append(f"**{results}** - Multiple Meanings Available.")
+                meanings.append(f"**{results}** - Multiple meanings available.")
             except wikipedia.exceptions.PageError:
                 continue
-            return "\n\n".join(meanings) if meanings else "No Valid results found."
-            
-    except Exception as e:
-        return f"Error: {e}"
+        
+        return "\n\n".join(meanings) if meanings else "No valid results found."
 
-query = input("Enter search text: ")
-print("\nResults:\n", search_wikipedia(query))
+    except Exception as e:
+        return f"Error:{e}"
+
+query = input("Enter search text:")
+print("\nresults:\n",search_wikipedia(query))
