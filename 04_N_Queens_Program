@@ -1,0 +1,50 @@
+N = 8  # Size of the Chessboard Board 8x8
+
+def print_solution(board):
+    """Function to print the board Configuration"""
+    for row in board:
+        print(" ".join("Q" if cell else "." for cell in row))
+    print()  # Added to separate solutions with a blank line
+
+def is_safe(board, row, col):
+    # Check the Column
+    for i in range(row):
+        if board[i][col]:
+            return False
+
+    # Check upper-left Diagonal
+    for i, j in zip(range(row, -1, -1), range(col, -1, -1)):
+        if board[i][j]:
+            return False
+    
+    # Check upper-right Diagonal
+    for i, j in zip(range(row, -1, -1), range(col, N)):
+        if board[i][j]:
+            return False
+            
+    return True  # Fixed indentation
+
+def solve_n_queens(board, row):
+    """Solve the N Queens Problem using Backtracking Method"""
+    if row >= N:
+        print_solution(board)
+        return True
+    
+    found_solution = False  # Added to track if we found any solution
+    for col in range(N):
+        if is_safe(board, row, col):
+            board[row][col] = 1  # Place Queen
+            if solve_n_queens(board, row + 1):  # Changed to if statement
+                found_solution = True
+            board[row][col] = 0  # Backtrack
+            
+    return found_solution  # Return whether we found a solution
+
+def solve():
+    """Driver Function to Initialize the Board and Start Solving"""
+    board = [[0] * N for _ in range(N)]
+    if not solve_n_queens(board, 0):
+        print("No solution exists")
+
+# Run the solver
+solve()
