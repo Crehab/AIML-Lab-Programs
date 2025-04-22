@@ -1,0 +1,82 @@
+#include <stdio.h>
+#include <time.h>
+#include <stdlib.h>
+
+#define MAX 5000
+
+int array[MAX];
+
+void merge(int low, int mid, int high)
+{
+	int temp[MAX];
+	int i = low;
+	int j = mid+1;
+	int k = low;
+	
+	while(i <= mid && j <= high)
+	{
+		if (array[i] <= array[j])
+			temp[k++] = array[i++];
+		else
+			temp[k++] = array[j++];
+	}
+	
+	while (i <= mid)
+		temp[k++] = array[i++];
+	
+	while (j <= high)
+		temp[k++] = array[j++];
+	
+	for (i = low; i <= high; i++)
+		array[i] = temp[i];
+}
+
+void merge_sort(int low, int high)
+{
+	if (low < high)
+	{
+		int mid = (low + high) / 2;
+		merge_sort(low, mid);
+		merge_sort(mid + 1, high);
+		merge(low, mid, high);
+	}
+}
+
+int main()
+{
+	int i, n, no;
+	double time_taken;
+	clock_t start, end;
+	
+	printf("Enter the number of elements (max %d): ", MAX);
+	scanf("%d", &n);
+	
+	if (n > MAX)
+	{
+		printf("Please enter a number less than or equal to %d.\n", MAX);
+		return 1;
+	}
+	
+	for(i = 0; i < n; i++)
+	{
+		no = rand() % n + 1;
+		array[i] = no;
+	}
+	
+	printf("Unsorted list is:\n");
+	for(i = 0; i < n; i++)
+		printf("%d ", array[i]);
+	
+	start = clock();
+	merge_sort(0, n-1);
+	end = clock();
+	
+	printf("\nSorted list is:\n");
+	for(i = 0; i < n; i++)
+		printf("%d ", array[i]);
+	
+	time_taken = ((double)(end - start)) / CLOCKS_PER_SEC * 1e9;
+	printf("\n%d elements sorted in %.2lf nanoseconds\n", n, time_taken);
+	
+	return 0;
+}
