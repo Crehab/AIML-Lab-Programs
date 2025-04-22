@@ -1,0 +1,88 @@
+#include <stdio.h>
+
+// Partition function
+int partition(int arr[], int low, int high) {
+    int temp, key;
+    int i = low;
+    int j = high + 1;
+    key = arr[low];
+
+    while (1) {
+        do {
+            i++;
+        } while (i <= high && arr[i] <= key);  // fixed direction
+
+        do {
+            j--;
+        } while (arr[j] > key);
+
+        if (i >= j)
+            break;
+
+        // Corrected swap
+        temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
+    }
+
+    // Final swap with pivot
+    temp = arr[low];
+    arr[low] = arr[j];
+    arr[j] = temp;
+
+    return j;
+}
+
+    
+
+// Quick Sort function
+void quickSort(int arr[], int low, int high) {
+    
+    int mid;
+    if (low >= high) return;
+    mid = partition(arr, low, high);
+    
+    quickSort(arr, low, mid - 1);
+    quickSort(arr, mid + 1, high);
+}
+
+int main() {
+    int arr[100], n, i = 0;
+
+    printf("Enter the size of the array: ");
+    scanf("%d", &n);
+
+    // Reading array using do-while
+    printf("Enter the array elements: ");
+    do {
+        scanf("%d", &arr[i]);
+        i++;
+    } while (i < n);
+
+    // Printing original array using do-while
+    printf("Original Array: ");
+    i = 0;
+    do {
+        printf("%d ", arr[i]);
+        i++;
+    } while (i < n);
+    printf("\n");
+
+    quickSort(arr, 0, n - 1);
+
+    // Printing sorted array using do-while
+    printf("Sorted Array: ");
+    i = 0;
+    do {
+        printf("%d ", arr[i]);
+        i++;
+    } while (i < n);
+    printf("\n");
+
+    printf("Time Complexity:\n");
+    printf("Best case: O(n log n)\n");
+    printf("Average case: O(n log n)\n");
+    printf("Worst case: O(n^2) (when array is already sorted or reverse sorted)\n");
+
+    return 0;
+}
