@@ -1,0 +1,78 @@
+def aStarAlgo(start_node, stop_node, graph, heuristic):
+    open_set = set([start_node])  # Set for open set
+    closed_set = set()  # Set for closed set
+    g = {}  # Dictionary for the cost from start node
+    parents = {}  # Dictionary for parents of nodes
+
+    g[start_node] = 0  # Cost of start node is 0
+    parents[start_node] = start_node  # The parent of the start node is itself
+
+    while len(open_set) > 0:
+        n = None
+
+        # Find the node in open_set with the lowest f(n) = g(n) + heuristic(n)
+        for v in open_set:
+            if n is None or g[v] + heuristic(v) < g[n] + heuristic(n):
+                n = v
+
+        # If we reach the goal node, stop the loop
+        if n == stop_node:
+            path = []
+            while parents[n] != n:
+                path.append(n)
+                n = parents[n]
+            path.append(start_node)
+            path.reverse()
+            print(f"Path found: {path}")
+            return path
+
+        open_set.remove(n)
+        closed_set.add(n)
+
+        # Explore the neighbors of the current node
+        for (m, weight) in get_neighbors(n, graph):
+            if m in closed_set:
+                continue
+
+            tentative_g_score = g[n] + weight
+
+            if m not in open_set:
+                open_set.add(m)
+            elif tentative_g_score >= g.get(m, float('inf')):
+                continue
+
+            parents[m] = n
+            g[m] = tentative_g_score
+
+    print('Path does not exist')
+    return None
+
+
+def get_neighbors(v, graph):
+    # Get neighbors for a node from the graph
+    return graph.get(v, [])
+
+
+def heuristic(n):
+    # Heuristic function that estimates the cost from a node to the goal
+    H_dist = {
+        'A': 11,
+        'B': 6,
+        'C': 99,
+        'D': 1,
+        'E': 7,
+    }
+    return H_dist.get(n, float('inf'))  # Default to inf if node not found
+
+
+# Example graph (Adjacency list representation)
+graph = {
+    'A': [('B', 1), ('C', 4)],
+    'B': [('A', 1), ('C', 2), ('D', 5)],
+    'C': [('A', 4), ('B', 2), ('D', 1)],
+    'D': [('B', 5), ('C', 1)],
+}
+
+# Find the shortest path from 'A' to 'D'
+path = aStarAlgo('A', 'D', graph, heuristic)
+print(f"Shortest path: {path}")
