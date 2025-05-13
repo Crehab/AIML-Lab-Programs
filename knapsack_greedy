@@ -1,0 +1,53 @@
+#include <stdio.h>
+
+void main()
+{
+	int curW, n;
+	float totV = 0.0;
+	int p[10], w[10], W;
+	int i, maxi;
+	int used[10];
+	
+	printf("Enter the no. of items: ");
+	scanf("%d", &n);
+	
+	printf("Enter the weight and price of all items: ");
+	for(i = 0; i < n; i++)
+		scanf("%d %d", &w[i], &p[i]);
+		
+	printf("Enter the capacity of Knapsack: ");
+	scanf("%d", &W);
+	
+	for(i = 0; i < n; i++) used[i] = 0;
+	
+	curW = W;
+	
+	while(curW > 0)
+	{
+		maxi = -1;
+		
+		for(i = 0; i < n; i++)
+		{
+			if(used[i] == 0 && (maxi == -1 || (((float)p[i] / w[i]) > ((float)p[maxi] / w[maxi]))))
+				maxi = i;
+		}
+		
+		used[maxi] = 1;
+		
+		if(w[maxi] <= curW)
+		{
+			curW = w[maxi];
+			totV += p[maxi];
+			printf("\nAdded object %d (%d weight, %d value) completely in the bag. Space left: %d.\n", maxi + 1, w[maxi], p[maxi], curW);
+		}
+		else
+		{
+			float frac = (float)curW / w[maxi];
+			totV += p[maxi] * frac;
+			printf("\nAdded %.2f%% (%d weight, %d value) of object %d in the bag.\n", frac * 100, w[maxi], p[maxi], maxi + 1);
+			curW = 0; //bag is full
+		}
+	}
+	
+	printf("Filled in the bag with objects worth %.2f .\n", totV);
+}
